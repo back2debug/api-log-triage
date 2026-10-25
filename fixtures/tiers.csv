@@ -1,0 +1,4 @@
+project_id,tier,rpm_limit,tpm_limit
+proj_fin_a,tier_4,10000,2000000
+proj_fin_b,tier_2,5000,450000
+proj_fin_c,tier_1,500,40000

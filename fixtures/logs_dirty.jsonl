@@ -1,0 +1,12 @@
+{"request_id":"req_001","timestamp":"2026-10-19T14:00:05Z","project_id":"proj_fin_a","model":"gpt-4o","status":200,"latency_ms":812,"prompt_tokens":1204,"completion_tokens":318,"error_code":null}
+{"request_id":"req_002","timestamp":"2026-10-19T14:00:07Z","project_id":"proj_fin_a","model":"gpt-4o","status":429,"latency_ms":41,"prompt_tokens":0,"completion_tokens":0,"error_code":"rate_limit_exceeded"}
+{"request_id":"req_003","timestamp":"2026-10-19T14:00:09Z","project_id":"proj_fin_a","model":"gpt-4o-mini","status":"200","latency_ms":"640","prompt_tokens":"980","completion_tokens":"210","error_code":""}
+{"request_id":"req_004","timestamp":"2026-10-19T14:00:12Z","project_id":"proj_fin_b","model":"gpt-4o","status":500,"latency_ms":5012,"prompt_tokens":1500,"completion_tokens":0,"error_code":"server_error"}
+{"request_id":"req_005","timestamp":"2026-10-19T14:00:14Z","project_id":"proj_fin_b","model":"gpt-4o","status":200,"latency_ms":null,"prompt_tokens":1100,"completion_tokens":290,"error_code":null}
+{"request_id":"req_006","timestamp":"2026-10-19T14:00:18Z","project_id":"proj_unknown","model":"gpt-4o","status":200,"latency_ms":755,"prompt_tokens":900,"completion_tokens":150,"error_code":null}
+{"request_id":"req_007","timestamp":"","project_id":"proj_fin_a","model":"gpt-4o","status":200,"latency_ms":700,"prompt_tokens":800,"completion_tokens":100,"error_code":null}
+this line is not json at all
+{"request_id":"req_008","timestamp":"2026-10-19T14:01:02Z","project_id":"proj_fin_a","model":"gpt-4o","status":200,"latency_ms":6400,"prompt_tokens":2200,"completion_tokens":540,"error_code":null}
+{"request_id":"req_009","timestamp":"2026-10-19T14:01:05Z","project_id":"proj_fin_a","model":"gpt-4o","status":429,"latency_ms":38,"prompt_tokens":0,"completion_tokens":0,"error_code":"rate_limit_exceeded"}
+{"request_id":"req_008","timestamp":"2026-10-19T14:01:40Z","project_id":"proj_fin_a","model":"gpt-4o","status":200,"latency_ms":690,"prompt_tokens":1000,"completion_tokens":200,"error_code":null}
+{"request_id":"req_010","timestamp":"2026-10-19T14:01:48Z","project_id":"proj_fin_c","model":"gpt-4o-mini","status":200,"latency_ms":430,"prompt_tokens":500,"completion_tokens":80,"error_code":null}

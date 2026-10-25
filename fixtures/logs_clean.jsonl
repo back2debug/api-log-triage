@@ -1,0 +1,5 @@
+{"request_id":"req_001","timestamp":"2026-10-19T14:00:05Z","project_id":"proj_fin_a","model":"gpt-4o","status":200,"latency_ms":812,"prompt_tokens":1204,"completion_tokens":318,"error_code":null}
+{"request_id":"req_002","timestamp":"2026-10-19T14:00:07Z","project_id":"proj_fin_a","model":"gpt-4o","status":200,"latency_ms":845,"prompt_tokens":1180,"completion_tokens":300,"error_code":null}
+{"request_id":"req_003","timestamp":"2026-10-19T14:00:09Z","project_id":"proj_fin_a","model":"gpt-4o-mini","status":200,"latency_ms":640,"prompt_tokens":980,"completion_tokens":210,"error_code":null}
+{"request_id":"req_004","timestamp":"2026-10-19T14:01:12Z","project_id":"proj_fin_b","model":"gpt-4o","status":200,"latency_ms":905,"prompt_tokens":1150,"completion_tokens":280,"error_code":null}
+{"request_id":"req_005","timestamp":"2026-10-19T14:01:44Z","project_id":"proj_fin_c","model":"gpt-4o-mini","status":200,"latency_ms":430,"prompt_tokens":500,"completion_tokens":80,"error_code":null}
