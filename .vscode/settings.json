@@ -1,0 +1,11 @@
+{
+"editor.fontSize": 15,
+"editor.minimap.enabled": false,
+"editor.wordWrap": "on",
+"editor.formatOnSave": true,
+"files.autoSave": "onFocusChange",
+"breadcrumbs.enabled": true,
+"terminal.integrated.fontSize": 15,
+"python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+"workbench.startupEditor": "none",
+}
