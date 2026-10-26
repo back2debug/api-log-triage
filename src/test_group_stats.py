@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 
 from io_loaders import load_jsonl
-from metrics import group_stats
+from metrics import group_stats, peak_per_minute
 from normalize import normalize_record, dedupe
 
 FIXTURES = Path(__file__).parent.parent / "fixtures"
@@ -35,3 +35,16 @@ def test_group_stats_proj_fin_a_gpt4o():
     assert stats["p99_latency_ms"] == pytest.approx(6288.24)
     assert stats["total_tokens"] == 5162
     assert stats["rate_limit_errors"] == 2
+
+def test_peak_per_minute_empty():
+    assert peak_per_minute([]) == 0
+    assert peak_per_minute([(None, 1)]) == 0
+
+
+def test_peak_rpm_and_tpm_proj_fin_a():
+    records = [r for r in clean_dirty_records() if r["project_id"] == "proj_fin_a"]
+    peak_rpm = peak_per_minute((r["timestamp"], 1) for r in records)
+    peak_tpm = peak_per_minute(
+        (r["timestamp"], r["prompt_tokens"] + r["completion_tokens"]) for r in records)
+    assert peak_rpm == 3
+    assert peak_tpm == 2740

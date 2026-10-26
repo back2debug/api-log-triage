@@ -1,4 +1,5 @@
 import math
+from collections import Counter
 
 def safe_div(numerator, denominator):
     if denominator == 0:
@@ -39,4 +40,20 @@ def group_stats(records):
         "total_tokens": sum(r["prompt_tokens"] + r["completion_tokens"] for r in records),
         "rate_limit_errors": sum(1 for r in records if r["status"] == 429),
     }
+
+def peak_per_minute(items):
+    buckets = Counter()
+    for ts, weight in items:
+        if ts is None:
+            continue
+        minute = ts.replace(second=0, microsecond=0)
+        buckets[minute] += weight
+    if not buckets:
+        return 0
+    return max(buckets.values())
+
+def over_limit(observed, limit):
+    if limit is None:
+        return None
+    return observed > limit
 

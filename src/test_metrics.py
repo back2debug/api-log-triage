@@ -1,5 +1,5 @@
 from normalize import to_float, to_int, to_str, parse_ts
-from metrics import safe_div, percentile, is_success
+from metrics import safe_div, percentile, is_success, over_limit
 
 
 def test_to_float_basic():
@@ -50,3 +50,9 @@ def test_is_success():
     assert is_success(204)
     assert not is_success(429)
     assert not is_success(500)
+
+def test_over_limit():
+    assert over_limit(3, 2) is True
+    assert over_limit(2, 5) is False
+    assert over_limit(2, 2) is False
+    assert over_limit(1, None) is None
