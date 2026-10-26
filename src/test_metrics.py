@@ -1,5 +1,5 @@
 from normalize import to_float, to_int, to_str, parse_ts
-from metrics import safe_div, percentile
+from metrics import safe_div, percentile, is_success
 
 
 def test_to_float_basic():
@@ -44,3 +44,9 @@ def test_parse_ts():
     assert parse_ts("") is None
     assert parse_ts("garbage") is None
     assert parse_ts("2026-10-19T14:00:05Z").minute == 0
+
+def test_is_success():
+    assert is_success(200)
+    assert is_success(204)
+    assert not is_success(429)
+    assert not is_success(500)
