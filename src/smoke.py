@@ -1,46 +1,55 @@
-import os, sys, json, time
+import json
+import os
+import sys
+import time
+
+import openai
 from openai import OpenAI
 
+MODEL = os.environ.get("OPENAI_MODEL", "gpt-4o-mini")
 client = OpenAI()
 
-def ask(prompt, model=None):
-    model = model or os.environ.get("OPENAI_MODEL", "gpt-4o-mini")
+
+def ms_since(t0):
+    return round((time.perf_counter() - t0) * 1000, 1)
+
+
+def ask(prompt, model=MODEL):
     t0 = time.perf_counter()
     try:
-        resp = client.chat.completions.create(
-            model=model,
-            messages=[{"role": "user", "content": prompt}],
-        )
-        return {
-            "ok": True,
-            "model": model,
-            "text": resp.choices[0].message.content,
-            "elapsed_ms": round((time.perf_counter() - t0) * 1000, 1),
-        }
-    except Exception as exc:
-        return {"ok": False, "model": model, "error": f"{type(exc).__name__}: {exc}"}
+        resp = client.responses.create(model=model, input=prompt)
+    except openai.APIError as exc:
+        return {"ok": False, "model": model, "error": f"{type(exc).__name__}: {exc}",
+                "elapsed_ms": ms_since(t0)}
+    return {"ok": True, "model": model, "text": resp.output_text, "elapsed_ms": ms_since(t0)}
 
-def ask_stream(prompt, model="gpt-4o-mini"):
-    stream = client.chat.completions.create(
-        model=model,
-        messages=[{"role": "user", "content": prompt}],
-        stream=True,
-    )
+
+def ask_stream(prompt, model=MODEL):
+    t0 = time.perf_counter()
+    ttft_ms = None
     chunks = []
-    for event in stream:
-        delta = event.choices[0].delta.content or ""
-        chunks.append(delta)
-        print(delta, end="", flush=True)
+    try:
+        stream = client.responses.create(model=model, input=prompt, stream=True)
+        for event in stream:
+            if event.type == "response.output_text.delta":
+                if ttft_ms is None:
+                    ttft_ms = ms_since(t0)
+                chunks.append(event.delta)
+                print(event.delta, end="", flush=True)
+    except openai.APIError as exc:
+        print()
+        return {"ok": False, "model": model, "error": f"{type(exc).__name__}: {exc}",
+                "ttft_ms": ttft_ms, "elapsed_ms": ms_since(t0)}
     print()
-    return "".join(chunks)
+    return {"ok": True, "model": model, "ttft_ms": ttft_ms, "elapsed_ms": ms_since(t0),
+            "chars": len("".join(chunks))}
+
 
 if __name__ == "__main__":
     prompt = sys.argv[1] if len(sys.argv) > 1 else "Say hello in five words."
-    
-    # Standard call
+
     print("--- Standard call ---")
     print(json.dumps(ask(prompt), indent=2))
-    
-    # Streaming call
+
     print("\n--- Stream call ---")
-    ask_stream("Say hello in five words.")
+    print(json.dumps(ask_stream(prompt), indent=2))
