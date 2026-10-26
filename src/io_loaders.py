@@ -1,4 +1,5 @@
 import json
+import csv
 
 
 def load_jsonl(path):
@@ -18,3 +19,14 @@ def load_jsonl(path):
                 continue
             records.append(obj)
     return records, errors
+
+def load_tiers(path):
+    tiers, errors = {}, []
+    with open(path, encoding="utf-8", newline="") as fh:
+        for lineno, row in enumerate(csv.DictReader(fh), start=2):
+            project_id = (row.get("project_id") or "").strip()
+            if not project_id:
+                errors.append({"file": str(path), "line": lineno, "error": "missing project_id"})
+                continue
+            tiers[project_id] = row
+    return tiers, errors

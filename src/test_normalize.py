@@ -1,10 +1,39 @@
 from pathlib import Path
 
 from io_loaders import load_jsonl
-from normalize import normalize_record, dedupe
+from normalize import normalize_record, dedupe, to_float, to_int, to_str, parse_ts
 
 FIXTURES = Path(__file__).parent.parent / "fixtures"
 
+def test_to_str():
+    assert to_str("") is None
+    assert to_str(None) is None
+    assert to_str(" x ") == "x"
+
+
+def test_parse_ts():
+    assert parse_ts("") is None
+    assert parse_ts("garbage") is None
+    assert parse_ts("2026-10-19T14:00:05Z").minute == 0
+
+def test_to_float_basic():
+    assert to_float("640") == 640.0
+    assert to_float(640) == 640.0
+    assert to_float("1,234.5") == 1234.5
+
+
+def test_to_float_blanks():
+    assert to_float("n/a") is None
+    assert to_float("") is None
+    assert to_float(None) is None
+    assert to_float(None, default=0.0) == 0.0
+
+
+def test_to_int():
+    assert to_int("42") == 42
+    assert to_int("42.7") == 42
+    assert to_int("n/a") is None
+    assert to_int("n/a", default=0) == 0
 
 def test_normalize_string_numbers():
     rec, warnings = normalize_record({

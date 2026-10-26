@@ -87,3 +87,10 @@ def dedupe(records):
             seen.add(rid)
         kept.append(rec)
     return kept, warnings
+
+def normalize_tier(row):
+    return {
+        "tier": to_str(row.get("tier")) or "unknown",
+        "rpm_limit": to_int(row.get("rpm_limit")),
+        "tpm_limit": to_int(row.get("tpm_limit")),
+    }
