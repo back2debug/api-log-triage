@@ -1,0 +1,34 @@
+from normalize import to_float, to_int
+from metrics import safe_div, percentile
+
+
+def test_to_float_basic():
+    assert to_float("640") == 640.0
+    assert to_float(640) == 640.0
+    assert to_float("1,234.5") == 1234.5
+
+
+def test_to_float_blanks():
+    assert to_float("n/a") is None
+    assert to_float("") is None
+    assert to_float(None) is None
+    assert to_float(None, default=0.0) == 0.0
+
+
+def test_to_int():
+    assert to_int("42") == 42
+    assert to_int("42.7") == 42
+    assert to_int("n/a") is None
+
+
+def test_safe_div():
+    assert safe_div(3, 4) == 0.75
+    assert safe_div(0, 5) == 0.0
+    assert safe_div(5, 0) is None
+
+
+def test_percentile():
+    assert percentile([1, 2, 3, 4], 50) == 2.5
+    assert percentile([], 95) is None
+    assert percentile([7], 99) == 7
+    assert percentile([100, 200, 300, 400, 500], 95) == 480.0
