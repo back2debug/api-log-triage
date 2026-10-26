@@ -17,3 +17,4 @@ def percentile(values, p):
     if lo == hi:
         return xs[int(rank)]
     return xs[lo] + (rank - lo) * (xs[hi] - xs[lo])
+

@@ -1,5 +1,6 @@
 import argparse, json, sys
 from dataclasses import dataclass, asdict
+from api_client import run_triage_agent
 
 @dataclass
 class Config:
