@@ -5,6 +5,8 @@ import openai
 from openai import OpenAI
 from agents import Agent, Runner
 
+from pydantic import BaseModel
+
 DEFAULT_MODEL = os.environ.get("OPENAI_MODEL", "gpt-4o-mini")
 
 
@@ -25,26 +27,32 @@ def call_model(client, prompt, model=DEFAULT_MODEL, instructions=None):
     return {"ok": True, "text": resp.output_text,
             "elapsed_ms": round((time.perf_counter() - t0) * 1000, 1)}
 
-def run_triage_agent(metrics_json: str, instructions: str, model: str = "gpt-4o-mini") -> dict:
-    """Run the IncidentTriage agent and return a uniform dict."""
-    client = OpenAI()
+class TriageSummary(BaseModel):
+    symptoms: str
+    likely_cause: str
+    recommended_next_action: str
+
+
+TRIAGE_INSTRUCTIONS = (
+    "You are an OpenAI enterprise support engineer. Given aggregated request-log "
+    "metrics as JSON, write a concise customer-facing triage: observed symptoms, "
+    "likely cause, and one recommended next action. Use only numbers present in "
+    "the input. If the data is insufficient, say so."
+)
+
+
+def run_triage_agent(metrics_json, model=DEFAULT_MODEL):
     agent = Agent(
         name="IncidentTriage",
-        instructions=instructions,
+        instructions=TRIAGE_INSTRUCTIONS,
         model=model,
+        output_type=TriageSummary,
     )
+    t0 = time.perf_counter()
     try:
-        result = Runner.run_sync(agent, input=metrics_json)
-        return {
-            "ok": True,
-            "text": result.final_output,
-            "elapsed_ms": None,  # Agents SDK doesn't expose elapsed time here
-            "attempt": 1,
-        }
+        result = Runner.run_sync(agent, metrics_json, max_turns=3)
     except Exception as exc:
-        return {
-            "ok": False,
-            "error": f"{type(exc).__name__}: {exc}",
-            "elapsed_ms": None,
-            "attempt": 0,
-        }
+        return {"ok": False, "error": f"{type(exc).__name__}: {exc}",
+                "elapsed_ms": round((time.perf_counter() - t0) * 1000, 1)}
+    return {"ok": True, "summary": result.final_output.model_dump(),
+            "elapsed_ms": round((time.perf_counter() - t0) * 1000, 1)}
